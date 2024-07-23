@@ -1,6 +1,6 @@
 <script lang="ts">
 	async function get_latest() {
-		const response = await fetch('http://127.0.0.1:5000/api/get_latest_post', {
+		const response = await fetch('http://127.0.0.1/api/get_latest_post', {
 			method: 'GET'
 		});
 
@@ -14,7 +14,7 @@
 		<p>Loading..</p>
 	{:then latest}
 		<div class="image">
-			<img src={`http://127.0.0.1:5000/static/${latest['source']}.jpg`} alt="Latest post" />
+			<img src={`http://127.0.0.1/static/${latest['source']}.jpg`} alt="Latest post" />
 		</div>
 	{/await}
 </div>

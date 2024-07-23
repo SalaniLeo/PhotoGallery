@@ -13,16 +13,16 @@ export const actions = {
                 state: "var(--font-primary-color)"
             });
         }
-        const response = await fetch(LOGIN_URL, {
+        const response = await fetch('/auth/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email,
-                password
+              email: 'example@example.com',
+              password: 'yourpassword'
             })
-        });
+          });
 
         const json = await response.json();
         if (json['status'] === 200) {
