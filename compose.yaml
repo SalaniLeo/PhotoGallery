@@ -9,6 +9,7 @@ services:
     environment: 
       - FLASK_SERVER_ADDR=flask-backend:8000
       - SVELTE_FRONT_ADDR=svelte-frontend:3000
+      - ALLOWED_HOSTS=flask-backend,localhost,127.0.0.1
     ports:
       - "80:80"
     depends_on:
@@ -40,6 +41,7 @@ services:
       - '3000:3000'
     environment: 
       - FLASK_SERVER_ADDR=flask-backend:8000
+      - ORIGIN=https://localhost:3000
     healthcheck:
       interval: 10s
       timeout: 10s

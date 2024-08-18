@@ -1,12 +1,12 @@
 import jwt, os, requests
 from dotenv import load_dotenv
+from flask import request
 
 load_dotenv()
-check_admin_url = os.environ.get('CHECK_ADMIN_URL')
 
 def generate_token(firstname, email):
     json = {'name': firstname, 'email': email}
-    response = requests.post(check_admin_url, json = json)
+    response = requests.post(f'http://{request.host}/api/auth/isadmin', json = json)
 
     if response.status_code == 200:
         try:

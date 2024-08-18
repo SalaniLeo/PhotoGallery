@@ -1,39 +1,42 @@
-import { VALIDATE_URL } from '$env/static/private';
-import { isUserLogged } from '$lib/stores.js';
+import { VALIDATE_URL, BACKEND_ADDR, BACKEND_PORT } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import type { LayoutServerLoad } from './$types';
 
-export async function load({ cookies, params }) {
+export const load: LayoutServerLoad = async ({ locals, url, request, cookies }) => {
 	const accessToken = cookies.get('accessToken');
-
+	
 	if (accessToken != null) {
-		const response = await fetch(VALIDATE_URL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				accessToken
-			})
-		});
-
-		if (response.status === 200) {
-			cookies.set("loggedIn", 'true', { secure: false, path: '/' })
-
-            const data = await response.json();
-			const username = data['user']['username'];
-			const admin = data['user']['admin'];
-			const loggedIn = true
-
-			return {
-				post: {
-					title: `Response is ${response.status}`,
-					content: `You are authenticated!`
+        const address = `http://${env.FLASK_SERVER_ADDR}`;
+		try {
+			const response = await fetch(address + VALIDATE_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
 				},
-				user: {
-					loggedIn: loggedIn,
-					name: username,
-					admin: admin
-				}
-			};
+				body: JSON.stringify({
+					accessToken
+				})
+			});
+	
+			if (response.status === 200) {
+				cookies.set("loggedIn", 'true', { secure: false, path: '/' })
+	
+				const data = await response.json();
+				const username = data['user']['username'];
+				const admin = data['user']['admin'];
+				const loggedIn = true
+	
+				return {
+					user: {
+						loggedIn: loggedIn,
+						name: username,
+						admin: admin
+					}
+				};
+			}
+		} catch(error) {
+			console.error('Could not connect to backend:', error)
+			throw error;
 		}
 	}
 
@@ -44,10 +47,6 @@ export async function load({ cookies, params }) {
 	}
 
 	return {
-		post: {
-			title: ``,
-			content: `You are not authenticated!`
-		},
 		user: {
 			loggedIn: false
 		}

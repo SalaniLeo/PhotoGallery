@@ -2,7 +2,7 @@
 import Cookies from 'js-cookie';
 import { writable } from 'svelte/store';
 
-export const currentTheme = writable("light");
+export const currentTheme = writable(getTheme());
 let newTheme = 'light'
 
 export function setCookie(name, args){
@@ -27,8 +27,8 @@ export function loadTheme() {
   if (getCookie('theme') != null) {
     newTheme = getCookie('theme');
     document.documentElement.dataset.theme == newTheme;
-    setTheme(newTheme, false);
+    // setTheme(newTheme, false);
   } else {
-    setTheme(newTheme, true);
+    // setTheme(newTheme, true);
   }
 }

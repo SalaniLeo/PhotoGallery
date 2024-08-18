@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { showCreatePost, refreshPosts } from '$lib/stores';
+	import { showCreatePost, refreshPosts, uploadAddress } from '$lib/stores';
 	import { upload_post } from '$lib/requests';
 
 	let showModal = false;
@@ -53,7 +53,7 @@
 			formData.append('description', description);
 
 			try {
-				const response = await fetch('http://127.0.0.1:5000/api/upload_post', {
+				const response = await fetch(address, {
 					method: 'POST',
 					body: formData
 				});

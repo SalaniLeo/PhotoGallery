@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
+from collections import OrderedDict
 from config import load_config
 from connect import connect
 from lib.jwt import generate_token, validate_token
@@ -22,22 +23,22 @@ config = load_config()
 load_dotenv()
 bcrypt = Bcrypt(app)
 
-@app.route('/auth/isadmin', methods=['POST'])
+@app.route('/api/auth/isadmin', methods=['POST'])
 def check_admin():
     response = Database.check_admin(request.json.get('name'), request.json.get('email'))
     return jsonify(response)
 
-@app.route('/api/get_posts', methods=['GET'])
+@app.route('/api/posts/all', methods=['GET'])
 def get_posts():
     response = Database.get_posts()
     return jsonify(response)
 
-@app.route('/api/get_latest_post', methods=['GET'])
+@app.route('/api/posts/latest', methods=['GET'])
 def get_latest_post():
     response = Database.get_latest_post()
     return jsonify(response)
 
-@app.route('/api/upload_post', methods=['POST'])
+@app.route('/api/posts/upload', methods=['POST'])
 def upload_post():
     file = request.files['file']
     title = request.form.get('title')
@@ -49,24 +50,27 @@ def upload_post():
     response = Database.upload_post(title, description, randomized_name)
     return jsonify(response)
 
-@app.route('/api/delete_post', methods=['POST'])
+@app.route('/api/posts/delete', methods=['POST'])
 def delete_post():
     response = Database.delete_post(request.json.get('title'), request.json.get('description'), request.json.get('path'), request.json.get('time'))
     if response.get('response') == True:
-        os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/static/{request.json.get('path')}.jpg")
+        try:
+            os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/static/{request.json.get('path')}.jpg")
+        except:
+            print('Could not delete file')
     return jsonify(response)
 
-@app.route('/auth/login', methods=['POST'])
+@app.route('/api/auth/login', methods=['POST'])
 def login():
     response = Database.log_in(request.json.get('email'), request.json.get('password'))
     return jsonify(response)
 
-@app.route('/auth/register', methods=['POST'])
+@app.route('/api/auth/register', methods=['POST'])
 def register():
     response = Database.register_user(request.json.get('firstname'), request.json.get('lastname'), request.json.get('email'), request.json.get('password'))
     return jsonify(response)
 
-@app.route('/auth/authenticate', methods=['POST'])
+@app.route('/api/auth/authenticate', methods=['POST'])
 def authenticate():
     token_content = validate_token(request.json.get('accessToken'), algorithms=["HS256"])
     response_data = {
@@ -105,14 +109,15 @@ class Database:
             conn = connect(config)
             cur = conn.cursor(cursor_factory=RealDictCursor)
             cur.execute("SELECT * FROM posts")
-            rows = cur.fetchmany(50)
+            rows = cur.fetchmany(10)
         except Exception as e:
             print(f"An error occurred: {e}")
             rows = []
         finally:
             cur.close()
             conn.close()
-        return rows
+        rows_reversed = list(reversed(rows))
+        return rows_reversed
 
     @staticmethod
     def get_latest_post():
@@ -182,6 +187,7 @@ class Database:
 
     @staticmethod
     def log_in(email, password):
+        print(request.headers.get('Host'))
         try:
             conn = connect(config)
             cur = conn.cursor()
@@ -209,7 +215,6 @@ class Database:
                     "status": 404
                 }
         except Exception as e:
-            print(e)
             response_data = {
                 "response": "Error",
                 "status": 500,

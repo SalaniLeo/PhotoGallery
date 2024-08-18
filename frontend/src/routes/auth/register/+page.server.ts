@@ -1,4 +1,4 @@
-import { REGISTER_URL } from '$env/static/private';
+import { REGISTER_URL, BACKEND_ADDR } from '$env/static/private';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
@@ -9,7 +9,7 @@ export const actions = {
         const firstname = data.get('firstname')
         const lastname = data.get('lastname')
 
-        const response = await fetch(REGISTER_URL, {
+        const response = await fetch(BACKEND_ADDR + REGISTER_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

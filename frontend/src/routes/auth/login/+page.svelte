@@ -1,11 +1,10 @@
 <script lang="ts">
-	import LatestPost from '$lib/components/latestPost.svelte';
-
 	let email = '',
 		password = '',
 		error = '';
 
 	export let form;
+	export let data;
 </script>
 
 <form method="POST">
@@ -47,13 +46,32 @@
 				</div>
 			</div>
 			<div class="right">
-				<LatestPost />
+				{#await data['latest_post']}
+					<p>Loading..</p>
+				{:then latest}
+					<div class="image">
+						<img src={`${data['address']}/static/${latest['source']}.jpg`} alt="Latest post" />
+					</div>
+				{/await}
 			</div>
 		</div>
 	</div>
 </form>
 
 <style>
+	.image {
+		display: flex;
+		justify-content: center;
+	}
+	img {
+		display: block;
+		max-width: 40vw; /* Maximum width */
+		max-height: 320px; /* Maximum height */
+		width: auto; /* Maintain aspect ratio */
+		height: auto; /* Maintain aspect ratio */
+		object-fit: scale-down; /* or object-fit: cover; */
+		border-radius: var(--border-radius-medium);
+	}
 	.root {
 		padding: 25px;
 		display: flex;
