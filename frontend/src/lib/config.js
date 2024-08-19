@@ -1,1 +1,0 @@
-export const allowedOrigins = ['http://localhost:3000', 'https://localhost:3000', 'https://gallery.salanileo.dev/', 'http://gallery.salanileo.dev/']

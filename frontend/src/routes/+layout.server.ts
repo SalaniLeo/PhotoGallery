@@ -1,4 +1,3 @@
-import { VALIDATE_URL } from '$env/static/private';
 import { env } from '$env/dynamic/private';
 import type { LayoutServerLoad } from './$types';
 
@@ -8,7 +7,7 @@ export const load: LayoutServerLoad = async ({ locals, url, request, cookies }) 
 	if (accessToken != null) {
         const address = `http://${env.FLASK_SERVER_ADDR}`;
 		try {
-			const response = await fetch(address + VALIDATE_URL, {
+			const response = await fetch(address + env.VALIDATE_URL, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

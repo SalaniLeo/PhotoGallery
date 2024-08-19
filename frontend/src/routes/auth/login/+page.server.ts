@@ -1,16 +1,15 @@
-import { LOGIN_URL, BACKEND_DOMAIN, GET_LATEST_POST_URL} from '$env/static/private';
 import { fail, redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 const address = `http://${env.FLASK_SERVER_ADDR}`;
 
 export async function load({ cookies, params }) {
-    const latest_post_data = await fetch(`${address}${GET_LATEST_POST_URL}`)
+    const latest_post_data = await fetch(`${address}${env.GET_LATEST_POST_URL}`)
     let latest_post = await latest_post_data.json();
 
     return {
         latest_post: latest_post,
-        address: BACKEND_DOMAIN
+        address: env.DOMAIN
     }
 }
 
@@ -27,7 +26,7 @@ export const actions = {
             });
         }
 
-        const response = await fetch(`${address}${LOGIN_URL}`, {
+        const response = await fetch(`${address}${env.LOGIN_URL}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

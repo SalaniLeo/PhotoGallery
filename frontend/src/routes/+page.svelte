@@ -143,7 +143,6 @@
 														post.source,
 														post.time
 													);
-													console.log('Post deleted:', result);
 												}}
 											>
 												<i class="fa-solid fa-trash-can"></i>
@@ -257,6 +256,14 @@
 		height: auto;
 		overflow: hidden;
 		border-radius: var(--border-radius-medium);
+	}
+	#enlarge-image {
+		width: 123px;
+		height: 100px;
+		z-index: 3423;
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 	.description {
 		line-height: 1.25rem;
