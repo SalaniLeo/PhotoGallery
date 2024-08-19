@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Export environment variables
 env DOMAIN="https://gallery.salanileo.dev" \
 FLASK_SERVER_ADDR="gallery.salanileo.dev" \
 VALIDATE_URL="/api/auth/authenticate" \
