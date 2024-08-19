@@ -52,3 +52,82 @@
 	</div>
 </nav>
 <slot />
+
+<style>
+	nav {
+		color: var(--text-color);
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		background-color: var(--accent-color-primary);
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		margin-left: 12rem;
+		margin-right: 12rem;
+		padding: 1rem;
+		border-radius: 10px;
+		box-shadow: var(--shadow-color-heavy) 0px 0px 10px;
+		text-align: center;
+		align-items: center;
+	}
+
+	nav > .left {
+		display: flex;
+		justify-content: flex-start;
+		gap: 10px;
+		align-items: center;
+	}
+
+	nav > .center {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		align-items: center;
+	}
+
+	nav > .right {
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+		align-items: center;
+	}
+
+	nav * {
+		min-width: max-content;
+	}
+
+	.themer {
+		scale: 115%;
+		display: flex;
+		align-items: center;
+		width: 20px;
+		cursor: pointer;
+	}
+
+	@media screen and (max-width: 1200px) {
+		nav {
+			margin-left: 8rem;
+			margin-right: 8rem;
+		}
+	}
+	@media screen and (max-width: 1000px) {
+		nav {
+			margin-left: 4rem;
+			margin-right: 4rem;
+		}
+		nav .hide2 {
+			display: none;
+		}
+	}
+	@media screen and (max-width: 720px) {
+		nav {
+			margin-left: 0rem;
+			margin-right: 0rem;
+			margin-top: 0rem;
+			border-radius: 0px;
+			grid-template-columns: 0.5fr 2fr 0.5fr;
+		}
+		nav .hide1 {
+			display: none;
+		}
+	}
+</style>

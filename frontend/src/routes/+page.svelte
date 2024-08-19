@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 
 	let error: any = null;
+	let expand_image = false;
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -107,7 +108,7 @@
 
 <div class="root">
 	<div class="content">
-		<div class="top">
+		<div class="admin-actions">
 			{#if $isUserLogged}
 				<p>Hi, {data.user?.name}!</p>
 				{#if data.user?.admin}
@@ -126,12 +127,24 @@
 					<p>No posts have been uploaded</p>
 				{:else}
 					{#each posts as post}
-						<div class="post">
+						<div class="post" class:fullscreen_post={expand_image}>
 							<div class="top">
+								<div class="left"></div>
 								<div class="title">
 									<h2>{post['name']}</h2>
 								</div>
 								<div class="actions">
+									<button
+										id="enlarge_btn"
+										on:click={() => {
+											expand_image = !expand_image;
+										}}
+										><i
+											class="fa-solid"
+											class:fa-up-right-and-down-left-from-center={!expand_image}
+											class:fa-down-left-and-up-right-to-center={expand_image}
+										></i></button
+									>
 									{#if $isUserLogged}
 										{#if data.user?.admin}
 											<button
@@ -151,7 +164,7 @@
 									{/if}
 								</div>
 							</div>
-							<div class="imageContainer">
+							<div class="image-container">
 								<img
 									class="image"
 									src={`${url}/static/${post['source']}.jpg`}
@@ -220,12 +233,7 @@
 		flex-direction: column;
 		width: 100%;
 	}
-	.top {
-		margin-bottom: 1rem;
-	}
-
 	.post {
-		margin-bottom: 1rem;
 		padding: 1rem;
 		padding-left: 2rem;
 		padding-right: 2rem;
@@ -243,12 +251,35 @@
 	.post > div {
 		margin: 0.5rem;
 	}
+	.post > .top {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 0.5rem;
+	}
+	.post > .top > div {
+		width: 100%;
+	}
+	.post > .top > .actions {
+		display: flex;
+		justify-content: end;
+		gap: 0.5rem;
+	}
+	.post > .description {
+		width: 80%;
+		max-width: 50vw;
+		line-height: 1.25rem;
+		text-align: center;
+	}
+	.post > .description > * {
+		color: var(--font-secondary-color);
+	}
 	.trash {
 		background-color: var(--font-error-color);
 		height: 40px;
 		width: 40px;
 	}
-	.image {
+	.post .image {
 		display: block;
 		max-width: 40vw;
 		max-height: 33vh;
@@ -257,23 +288,29 @@
 		overflow: hidden;
 		border-radius: var(--border-radius-medium);
 	}
-	#enlarge-image {
-		width: 123px;
-		height: 100px;
-		z-index: 3423;
-		position: absolute;
-		top: 0;
-		left: 0;
+	.post .image-container {
+		margin: 0 !important;
 	}
-	.description {
-		line-height: 1.25rem;
-		text-align: center;
+	.fullscreen_post .image {
+		display: block;
+		max-width: 70vw;
+		max-height: 75vh;
+		width: auto;
+		height: auto;
+		overflow: hidden;
+		border-radius: var(--border-radius-medium);
 	}
-	.description > * {
-		color: var(--font-secondary-color);
+	.admin-actions {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		margin-bottom: 0.5rem;
 	}
+
 	@media screen and (max-width: 1200px) {
-		.image {
+		.post .image {
 			max-width: 50vw;
 		}
 	}
@@ -281,14 +318,42 @@
 		.post {
 			border-radius: var(--border-radius-medium);
 		}
-		.image {
+		.post .image {
 			max-width: 60vw;
 			border-radius: var(--border-radius-light);
 		}
 	}
 	@media screen and (max-width: 720px) {
-		.image {
-			max-width: 100%;
+		.fullscreen_post {
+			background-color: var(--shadow-color-medium);
+			backdrop-filter: blur(10px);
+			width: 100vw;
+			padding-left: 0px;
+			padding-right: 0px;
+			height: 100vh;
+			position: fixed;
+			top: 0px;
+			transition-duration: 0s;
+		}
+		.fullscreen_post p,
+		.fullscreen_post h2 {
+			display: none;
+		}
+		.fullscreen_post .actions {
+			margin-right: 1rem;
+			margin-bottom: 1rem;
+			transform: translateY(-100px);
+		}
+		.fullscreen_post .image {
+			display: block;
+			max-width: unset;
+			max-height: unset;
+			left: 0px;
+			width: 100%;
+			height: auto;
+			overflow: hidden;
+			transform: translateY(-100px);
+			border-radius: var(--border-radius-medium);
 		}
 	}
 	dialog {
@@ -340,10 +405,6 @@
 	button {
 		padding: 10px;
 		border-radius: var(--border-radius-medium);
-	}
-	.center {
-		min-width: 400px;
-		min-height: 300px;
 	}
 	img {
 		max-width: 500px;
