@@ -3,12 +3,11 @@
 	import { goto } from '$app/navigation';
 
 	let error: any = null;
-	let expand_image = false;
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	let posts = data['posts'];
+	let posts = data['posts'].map((post: any) => ({ ...post, expand_image: false })); // Initialize expand_image for each post
 	const addresses = data['addresses'];
 
 	const url = addresses['url'];
@@ -104,6 +103,16 @@
 			console.error('Could not delete post: ', error);
 		}
 	}
+
+	function toggleExpandImage(index: number) {
+		posts = posts.map((post: { expand_image: any }, i: number) => {
+			if (i === index) {
+				return { ...post, expand_image: !post.expand_image };
+			} else {
+				return { ...post, expand_image: false };
+			}
+		});
+	}
 </script>
 
 <div class="root">
@@ -126,56 +135,65 @@
 				{:else if posts.length < 1}
 					<p>No posts have been uploaded</p>
 				{:else}
-					{#each posts as post}
-						<div class="post" class:fullscreen_post={expand_image}>
-							<div class="top">
-								<div class="left"></div>
-								<div class="title">
-									<h2>{post['name']}</h2>
-								</div>
-								<div class="actions">
-									<button
-										id="enlarge_btn"
-										on:click={() => {
-											expand_image = !expand_image;
-										}}
-										><i
-											class="fa-solid"
-											class:fa-up-right-and-down-left-from-center={!expand_image}
-											class:fa-down-left-and-up-right-to-center={expand_image}
-										></i></button
-									>
-									{#if $isUserLogged}
-										{#if data.user?.admin}
-											<button
-												class="trash"
-												on:click={async () => {
-													const result = await delete_post(
-														post.name,
-														post.description,
-														post.source,
-														post.time
-													);
-												}}
-											>
-												<i class="fa-solid fa-trash-can"></i>
-											</button>
+					<div class="posts-container">
+						{#each posts as post, index}
+							<div class="post {post.id}" class:fullscreen_post={post.expand_image}>
+								<div class="top">
+									<div class="left"></div>
+									<div class="title">
+										<h2>{post['name']}</h2>
+									</div>
+									<div class="actions">
+										<button
+											id="enlarge_btn"
+											class="button"
+											on:click={() => toggleExpandImage(index)}
+											><i
+												class="fa-solid"
+												class:fa-up-right-and-down-left-from-center={!post.expand_image}
+												class:fa-down-left-and-up-right-to-center={post.expand_image}
+											></i></button
+										>
+										<a
+											href="{url}/static/{post['source']}.jpg"
+											download={post['source']}
+											class="button"
+											id="download"><i class="fa-solid fa-download"></i></a
+										>
+
+										{#if $isUserLogged}
+											{#if data.user?.admin}
+												<button
+													id="trash"
+													class="button"
+													on:click={async () => {
+														const result = await delete_post(
+															post.name,
+															post.description,
+															post.source,
+															post.time
+														);
+													}}
+												>
+													<i class="fa-solid fa-trash-can"></i>
+												</button>
+											{/if}
 										{/if}
-									{/if}
+									</div>
+								</div>
+								<div class="image-container">
+									<img
+										class="image"
+										src={`${url}/static/${post['source']}.jpg`}
+										alt={`${url}/static/${post['source']}.jpg`}
+									/>
+								</div>
+								<div class="description">
+									<p>{post['description']}</p>
 								</div>
 							</div>
-							<div class="image-container">
-								<img
-									class="image"
-									src={`${url}/static/${post['source']}.jpg`}
-									alt={`${url}/static/${post['source']}.jpg`}
-								/>
-							</div>
-							<div class="description">
-								<p>{post['description']}</p>
-							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				{/if}
 			{/key}
 		</div>
@@ -233,6 +251,12 @@
 		flex-direction: column;
 		width: 100%;
 	}
+	.posts-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		align-items: center;
+	}
 	.post {
 		padding: 1rem;
 		padding-left: 2rem;
@@ -244,6 +268,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		width: fit-content;
 	}
 	.post h2 {
 		margin: 0px;
@@ -259,6 +284,10 @@
 	}
 	.post > .top > div {
 		width: 100%;
+		min-width: fit-content;
+	}
+	.post > .top > .title {
+		min-width: max-content;
 	}
 	.post > .top > .actions {
 		display: flex;
@@ -269,15 +298,18 @@
 		width: 80%;
 		max-width: 50vw;
 		line-height: 1.25rem;
-		text-align: center;
+		text-align: center !important;
 	}
 	.post > .description > * {
 		color: var(--font-secondary-color);
+		margin: 0.5rem;
 	}
-	.trash {
+	#trash {
 		background-color: var(--font-error-color);
-		height: 40px;
-		width: 40px;
+	}
+	#download {
+		max-height: 16px;
+		width: 16px;
 	}
 	.post .image {
 		display: block;
@@ -315,15 +347,44 @@
 		}
 	}
 	@media screen and (max-width: 1000px) {
+		.posts-container {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			align-items: unset;
+			padding: 1rem;
+		}
 		.post {
 			border-radius: var(--border-radius-medium);
+			transition-duration: 0s !important;
+			width: unset;
+		}
+		.post > .top > div {
+			width: 100%;
+			min-width: unset;
 		}
 		.post .image {
 			max-width: 60vw;
 			border-radius: var(--border-radius-light);
 		}
+		.post > .top {
+			flex-direction: column;
+			margin-bottom: 1rem;
+		}
+		.post > .top > .actions {
+			display: flex;
+			justify-content: center;
+			gap: 0.5rem;
+		}
 	}
 	@media screen and (max-width: 720px) {
+		.post * {
+			transition-duration: 0s !important;
+		}
+		.fullscreen_post * {
+			max-width: 100vw !important;
+			transition-duration: 0s !important;
+		}
 		.fullscreen_post {
 			background-color: var(--shadow-color-medium);
 			backdrop-filter: blur(10px);
@@ -333,7 +394,7 @@
 			height: 100vh;
 			position: fixed;
 			top: 0px;
-			transition-duration: 0s;
+			left: 0px !important;
 		}
 		.fullscreen_post p,
 		.fullscreen_post h2 {
@@ -354,6 +415,10 @@
 			overflow: hidden;
 			transform: translateY(-100px);
 			border-radius: var(--border-radius-medium);
+		}
+		.post > .description {
+			width: unset;
+			max-width: unset;
 		}
 	}
 	dialog {
@@ -411,7 +476,7 @@
 		max-height: 500px;
 	}
 	.name,
-	.description {
+	dialog .description {
 		display: flex;
 		gap: 40px;
 		width: 400px;

@@ -2,9 +2,9 @@
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 :root{
     /* Used for ui elements background. Use appropriate proportions for each one */
-    --primary-color: #191919;
-    --secondary-color: #242424;
-    --tertiary-color: #4f4f4f;
+    --primary-color: #0e0e0e;
+    --secondary-color: #131314;
+    --terthiary-color: #131315;
   
     /* Used for shadows, under ui elements */
      --shadow-color-heavy: #0a0a0aad;
@@ -12,11 +12,11 @@
      --shadow-color-light: #00000042;
   
     /* Used to refine a page colors, to give a personal touch */
-    --accent-color-primary: #494949;
+    --accent-color-primary: #1e2b2a;
     --accent-color-secondary: #3b3b3b;
 
     /* Outline types */
-    --outline-inactive: #767676;
+    --outline-inactive: #4e4e4e;
     --outline-active: #767676;
 
     /* Used to refine a page colors, to give a personal touch */
@@ -34,7 +34,7 @@
     --border-radius-medium: 8px;
     --border-radius-heavy: 16px;
   }
-  
+
   [data-theme="light"] {
   
     /* Used for ui elements background. Use appropriate proportions for each one */
@@ -78,8 +78,11 @@
     font-family: "Josefin Sans", sans-serif;
     color: var(--font-primary-color);  
     text-decoration: none;
-}
-
+  }
+  .button {
+    height: 40px;
+		width: 40px;
+  }
   .root {
     display: flex;
     flex-direction: column;
@@ -127,8 +130,8 @@
     border-radius: var(--border-radius-heavy);
     box-shadow: var(--shadow-color-medium) 0px 0px 10px;
   }
-  
-  button {
+
+  button, .button {
     background-color: var(--accent-color-primary);
     border: none;
     border-radius: var(--border-radius-light);
@@ -137,7 +140,7 @@
     box-shadow: var(--shadow-color-light) 0px 0px 10px;
   }
 
-  button:hover {
+  button:hover, .button:hover {
     box-shadow: var(--shadow-color-medium) 0px 0px 5px;
     background-color: var(--accent-color-secondary);
   }
