@@ -40,7 +40,7 @@ function isFormContentType(request: Request) {
 // Main Handle Function
 export const handle: Handle = async ({ event, resolve }) => {
     // Apply CSRF Protection
-    csrf(event, [env.DOMAIN]);
+    csrf(event, [env.ORIGIN]);
 
     // Determine the theme
     let cookieTheme = event.cookies.get("theme");
