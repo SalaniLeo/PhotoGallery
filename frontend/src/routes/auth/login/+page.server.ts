@@ -1,4 +1,4 @@
-import { LOGIN_URL, BACKEND_IP, GET_LATEST_POST_URL} from '$env/static/private';
+import { LOGIN_URL, BACKEND_DOMAIN, GET_LATEST_POST_URL} from '$env/static/private';
 import { fail, redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
@@ -10,7 +10,7 @@ export async function load({ cookies, params }) {
 
     return {
         latest_post: latest_post,
-        address: BACKEND_IP
+        address: BACKEND_DOMAIN
     }
 }
 

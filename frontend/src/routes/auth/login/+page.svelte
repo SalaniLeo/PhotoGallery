@@ -36,10 +36,7 @@
 							<small style="color: {form?.state};">{form?.error}</small>
 						{/if}
 					</div>
-					<div class="oauth">
-						<!-- <b>Log in with:</b> -->
-						<!-- <button>G</button> -->
-					</div>
+					<div class="oauth"></div>
 				</div>
 				<div class="ralign">
 					<button type="submit">Log In</button>
@@ -49,9 +46,11 @@
 				{#await data['latest_post']}
 					<p>Loading..</p>
 				{:then latest}
-					<div class="image">
-						<img src={`${data['address']}/static/${latest['source']}.jpg`} alt="Latest post" />
-					</div>
+					{#if latest}
+						<div class="image">
+							<img src={`${data['address']}/static/${latest['source']}.jpg`} alt="Latest post" />
+						</div>
+					{/if}
 				{/await}
 			</div>
 		</div>

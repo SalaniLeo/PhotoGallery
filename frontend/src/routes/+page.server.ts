@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { GET_POSTS_URL, BACKEND_PORT, BACKEND_IP, DELETE_POST, UPLOAD_POST, BACKEND_ADDR, FLASK_SERVER_ADDR } from '$env/static/private';
+import { GET_POSTS_URL, BACKEND_DOMAIN, DELETE_POST, UPLOAD_POST } from '$env/static/private';
 import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async ( { url } ) => {
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ( { url } ) => {
 
         return {
             addresses: { 
-                url: BACKEND_IP,
+                url: BACKEND_DOMAIN,
                 address: address,
                 ip: url.origin,
                 delete: DELETE_POST,

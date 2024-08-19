@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { isUserLogged, refreshPosts, showCreatePost } from '$lib/stores';
 	import { goto } from '$app/navigation';
-	import { currentTheme } from '$lib/theme';
 
 	let error: any = null;
 
@@ -95,7 +94,7 @@
 					'Content-Type': 'application/json'
 				}
 			}).then((response) => {
-				const updatedArray = posts.filter((item) => item.source !== path);
+				const updatedArray = posts.filter((item: { source: string }) => item.source !== path);
 				posts = updatedArray;
 				refreshPosts.set(!$refreshPosts);
 				return response.json();

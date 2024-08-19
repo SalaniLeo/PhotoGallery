@@ -2,8 +2,7 @@
 	import { isUserLogged } from '$lib/stores.js';
 	import '../app.css';
 	import '@fortawesome/fontawesome-free/css/all.min.css';
-	import { setTheme, currentTheme, loadTheme } from '$lib/theme';
-	import { onMount } from 'svelte';
+	import { setTheme, currentTheme } from '$lib/theme';
 	export let data;
 
 	async function logout() {

@@ -1,4 +1,4 @@
-import { VALIDATE_URL, BACKEND_ADDR, BACKEND_PORT } from '$env/static/private';
+import { VALIDATE_URL } from '$env/static/private';
 import { env } from '$env/dynamic/private';
 import type { LayoutServerLoad } from './$types';
 

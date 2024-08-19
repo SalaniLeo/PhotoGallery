@@ -1,5 +1,8 @@
-import { REGISTER_URL, BACKEND_ADDR } from '$env/static/private';
+import { REGISTER_URL } from '$env/static/private';
 import { fail, redirect } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
+
+const address = `http://${env.FLASK_SERVER_ADDR}`;
 
 export const actions = {
     default: async ({ request, cookies }) => {
@@ -9,7 +12,7 @@ export const actions = {
         const firstname = data.get('firstname')
         const lastname = data.get('lastname')
 
-        const response = await fetch(BACKEND_ADDR + REGISTER_URL, {
+        const response = await fetch(`${address}${REGISTER_URL}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

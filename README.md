@@ -1,10 +1,14 @@
 # PhotoGallery
 
-🎑 Website where you can upload your photos and host with docker.
+🎑 Self Hostable website to show your best photos!
 
-By default only admins can upload photos
+## Usage
 
-## Use without docker
+## With docker (recommanded)
+
+    $docker compose up
+
+### Use without docker is only for testing
 
 ### To start backend
 
@@ -13,7 +17,3 @@ By default only admins can upload photos
 ### To start frontend
 
     $bash frontend.sh
-
-## With docker
-
-    $docker compose up
