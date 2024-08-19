@@ -36,10 +36,7 @@
 							<small style="color: {form?.state};">{form?.error}</small>
 						{/if}
 					</div>
-					<div class="oauth">
-						<!-- <b>Log in with:</b> -->
-						<!-- <button>G</button> -->
-					</div>
+					<div class="oauth"></div>
 				</div>
 				<div class="ralign">
 					<button type="submit">Log In</button>
@@ -49,9 +46,11 @@
 				{#await data['latest_post']}
 					<p>Loading..</p>
 				{:then latest}
-					<div class="image">
-						<img src={`${data['address']}/static/${latest['source']}.jpg`} alt="Latest post" />
-					</div>
+					{#if latest}
+						<div class="image">
+							<img src={`${data['address']}/static/${latest['source']}.jpg`} alt="Latest post" />
+						</div>
+					{/if}
 				{/await}
 			</div>
 		</div>
@@ -80,7 +79,7 @@
 	}
 	.container {
 		padding: 0px;
-		width: 1000px;
+		width: max-content;
 		height: fit-content;
 		border-radius: var(--border-radius-heavy);
 		background-color: var(--secondary-color);
@@ -89,8 +88,9 @@
 		overflow: hidden;
 	}
 	.container > .left {
-		padding: 15px;
+		padding: 1rem;
 		width: 40%;
+		min-width: 250px;
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
@@ -98,7 +98,7 @@
 	.container > .right {
 		background-color: var(--tertiary-color);
 		width: 60%;
-		padding: 15px;
+		padding: 1.5rem;
 	}
 	.left > .content {
 		height: 100%;

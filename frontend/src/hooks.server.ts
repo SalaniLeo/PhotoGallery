@@ -1,11 +1,11 @@
 import { error, type Handle, type RequestEvent } from "@sveltejs/kit";
-import { allowedOrigins } from "$lib/config.js";
 import { currentTheme } from "$lib/theme";
+import { env } from "$env/dynamic/private";
 
 // CSRF Protection Middleware
 const csrf = (
     event: RequestEvent,
-    allowedOrigins: string[],
+    allowedOrigins: string[] | any,
 ) => {
     const { request } = event;
 
@@ -40,7 +40,7 @@ function isFormContentType(request: Request) {
 // Main Handle Function
 export const handle: Handle = async ({ event, resolve }) => {
     // Apply CSRF Protection
-    csrf(event, allowedOrigins);
+    csrf(event, [env.DOMAIN]);
 
     // Determine the theme
     let cookieTheme = event.cookies.get("theme");
