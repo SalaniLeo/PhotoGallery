@@ -9,5 +9,5 @@ GET_POSTS_URL="/api/posts/all" \
 GET_LATEST_POST_URL="/api/posts/latest" \
 DELETE_POST="/api/posts/delete" \
 UPLOAD_POST="/api/posts/upload" \
-ORIGIN="['https://127.0.0.1:5173','http://127.0.0.1:5173','https://127.0.0.1', 'http://127.0.0.1']" \
+ORIGIN="['https://localhost:5173','http://localhost:5173','https://localhost', 'http://localhost', 'https://gallery.salanileo.dev']" \
 npm run dev --prefix frontend -- --host

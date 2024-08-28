@@ -128,7 +128,7 @@
     padding: 1.5rem;
     background-color: var(--secondary-color);
     border-radius: var(--border-radius-heavy);
-    box-shadow: var(--shadow-color-medium) 0px 0px 10px;
+    /* box-shadow: var(--shadow-color-medium) 0px 0px 10px; */
   }
 
   button, .button {
@@ -137,12 +137,12 @@
     border-radius: var(--border-radius-light);
     padding: 0.75rem;
     cursor: pointer;
-    box-shadow: var(--shadow-color-light) 0px 0px 10px;
+    /* box-shadow: var(--shadow-color-light) 0px 0px 10px; */
   }
 
   button:hover, .button:hover {
     box-shadow: var(--shadow-color-medium) 0px 0px 5px;
-    background-color: var(--accent-color-secondary);
+    /* background-color: var(--accent-color-secondary); */
   }
 
   button:disabled {

@@ -22,6 +22,12 @@
 <nav>
 	<div class="left">
 		<a href="/">Home<span class="hide2"></span></a>
+		|
+		<a href="/">WIP<span class="hide2"></span></a>
+		|
+		<a href="https://github.com/SalaniLeo/PhotoGallery"
+			><i class="fa-brands fa-github"></i><span class="hide2"></span></a
+		>
 	</div>
 	<div class="center"></div>
 	<div class="right">
