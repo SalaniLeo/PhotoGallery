@@ -8,7 +8,6 @@ from config import load_config
 from connect import connect
 from lib.jwt import generate_token, validate_token
 import random, string, os, time
-from flask import send_file
 
 keepalive_kwargs = {
     "keepalives": 1,
@@ -17,7 +16,7 @@ keepalive_kwargs = {
     "keepalives_count": 5,
 }
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='posts')
 CORS(app)
 config = load_config()
 load_dotenv()
@@ -46,7 +45,7 @@ def upload_post():
 
     randomized_name = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
 
-    file.save(f'{os.path.dirname(os.path.abspath(__file__))}/static/{randomized_name}.jpg')
+    file.save(f'{os.path.dirname(os.path.abspath(__file__))}/posts/{randomized_name}.jpg')
     response = Database.upload_post(title, description, randomized_name)
     return jsonify(response)
 
@@ -55,7 +54,7 @@ def delete_post():
     response = Database.delete_post(request.json.get('title'), request.json.get('description'), request.json.get('path'), request.json.get('time'))
     if response.get('response') == True:
         try:
-            os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/static/{request.json.get('path')}.jpg")
+            os.remove(f"{os.path.dirname(os.path.abspath(__file__))}/posts/{request.json.get('path')}.jpg")
         except:
             print('Could not delete file')
     return jsonify(response)

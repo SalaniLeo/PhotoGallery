@@ -2,6 +2,7 @@ import type { PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async ( { url } ) => {
+    console.log(url.origin)
     try {
         const address = `http://${env.FLASK_SERVER_ADDR}`;
         const response = await fetch(address + env.GET_POSTS_URL);
