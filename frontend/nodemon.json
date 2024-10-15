@@ -1,0 +1,6 @@
+{
+    "watch": ["src", "static"],
+    "ignore": ["node_modules", "build", ".git", "tmp"],
+    "ext": "js,ts,svelte"
+  }
+  

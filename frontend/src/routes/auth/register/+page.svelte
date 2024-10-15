@@ -1,4 +1,6 @@
 <script lang="ts">
+	import PostView from './../../../lib/components/postView.svelte';
+
 	let email = '',
 		password = '',
 		repeatedPassword = '',
@@ -7,13 +9,14 @@
 		error = '';
 
 	export let form;
+	export let data;
 </script>
 
 <form method="POST">
 	<div class="root">
 		<div class="container">
 			<div class="left">
-				<h3>Sign In</h3>
+				<h2>Sign in</h2>
 				<div class="content">
 					<div class="inputs">
 						<input
@@ -54,21 +57,21 @@
 							<small style="color: {form?.state};">{form?.error}</small>
 						{/if}
 					</div>
-					<div class="oauth">
+					<!-- <div class="oauth">
 						<b>Continue with:</b>
 						<button>G</button>
-					</div>
+					</div> -->
 				</div>
 				<div class="ralign">
 					{#if password !== repeatedPassword || !email || !password || !firstname || !lastname}
-						<button type="submit" disabled>Log In</button>
+						<button type="submit" disabled>Sign in</button>
 					{:else if password === repeatedPassword || email || password || firstname || lastname}
-						<button type="submit">Log In</button>
+						<button type="submit">Sign in</button>
 					{/if}
 				</div>
 			</div>
 			<div class="right">
-				<p>Content!</p>
+				<PostView post={data.latest_post} imageOnly={true} useAnalytics={false}></PostView>
 			</div>
 		</div>
 	</div>
@@ -83,31 +86,36 @@
 	}
 	.container {
 		padding: 0px;
-		width: 1000px;
+		width: unset;
 		height: fit-content;
 		border-radius: var(--border-radius-heavy);
-		background-color: var(--secondary-color);
+		border: 2px solid var(--border-color);
+		background-color: var(--background-blurry);
 		display: flex;
 		flex-direction: row;
 		overflow: hidden;
 	}
 	.container > .left {
-		padding: 15px;
+		padding: 1rem;
 		width: 40%;
+		min-width: 250px;
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
 	}
 	.container > .right {
-		background-color: var(--tertiary-color);
-		width: 60%;
-		padding: 15px;
+		width: unset;
+		display: flex;
+		align-items: center;
+		padding: 1rem;
 	}
 	.left > .content {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
+		align-items: unset;
+		justify-self: unset;
 	}
 	.left > .content > .errorslot {
 		height: 0px;
@@ -152,7 +160,10 @@
 			margin-right: 0.5rem;
 		}
 		.right {
-			display: none;
+			display: none !important;
+		}
+		.container {
+			width: 100%;
 		}
 		.left {
 			width: 100% !important;

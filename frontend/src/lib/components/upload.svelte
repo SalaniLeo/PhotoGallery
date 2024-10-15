@@ -1,7 +1,6 @@
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <script lang="ts">
-	import { showCreatePost, refreshPosts } from '$lib/stores';
+	import { showToast } from '$lib';
+	import { showCreatePost, rootData } from '$lib/stores';
 
 	export let data;
 	const addresses = data['addresses'];
@@ -41,42 +40,62 @@
 	}
 
 	async function handleUpload() {
-		if (!uploading) {
-			uploading = true;
-			const file = input.files[0];
-			if (!file) {
-				alert('Please select a file first.');
-				uploading = false;
-				return;
+		if (uploading) return;
+
+		uploading = true;
+		const file = input?.files?.[0];
+
+		if (!file) {
+			alert('Please select a file first.');
+			uploading = false;
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append('file', file);
+		formData.append('title', title);
+		formData.append('description', description);
+
+		try {
+			const response = await fetch(upload_address, {
+				method: 'POST',
+				headers: {
+					'x-api-key': $rootData.apikey
+				},
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error(`Upload failed: ${response.statusText}`);
 			}
 
-			const formData = new FormData();
-			formData.append('file', file);
-			formData.append('title', title);
-			formData.append('description', description);
+			const data = await response.json();
+			const { postData } = data;
 
-			try {
-				const response = await fetch(upload_address, {
-					method: 'POST',
-					body: formData
-				});
+			showToast('Post uploaded succesfully', data.status);
 
-				if (response.ok) {
-					console.log(response);
-					showCreatePost.set(!$showCreatePost);
-					refreshPosts.set(!$refreshPosts);
-				} else {
-					console.error('Upload failed:', response.statusText);
-				}
-			} catch (error) {
-				console.error('Error uploading the file:', error);
-			} finally {
-				uploading = false;
-			}
+			$rootData.posts.unshift({
+				name: title,
+				description: description,
+				source: postData.filename,
+				id: postData.post_id,
+				reactions: [],
+				expand_picker: false,
+				like_count: 0
+			});
+
+			showCreatePost.set(false);
+		} catch (error) {
+			showToast('Could not upload post: ' + error, 400);
+			console.error('Error uploading the file:', error);
+		} finally {
+			uploading = false;
 		}
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <dialog
 	bind:this={dialog}
 	on:close={() => showCreatePost.set(false)}
@@ -120,20 +139,21 @@
 
 <style>
 	dialog {
-		background-color: var(--primary-color);
+		background-color: var(--terthiary-color);
 		border-radius: var(--border-radius-heavy);
 		border: none;
 		padding: 0;
 		width: max-content;
 		height: fit-content;
-		outline: 2px solid var(--accent-color-primary);
+		border: 2px solid var(--border-color);
+		backdrop-filter: blur(--background-blur-heavy);
 	}
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);
 		backdrop-filter: blur(4px);
 	}
 	.dialog-content {
-		padding: 1em;
+		padding: 1rem;
 	}
 	dialog[open] {
 		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -196,9 +216,9 @@
 	.textInput {
 		border-radius: var(--border-radius-medium);
 		background-color: var(--secondary-color);
+		border: 2px solid var(--border-color);
 		outline: none;
-		border: none;
-		padding: 10px;
+		padding: 0.5rem;
 		width: 100%;
 		transition-duration: 0.1s !important;
 	}

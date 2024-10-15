@@ -1,54 +1,65 @@
+// @ts-nocheck
 import { env } from '$env/dynamic/private';
+import { getAddresses } from '$lib/consts';
+import { get_posts, user_post_info, validate_access } from '$lib/fetcher';
+import { verifyRefreshToken } from '$lib/verifyAccess';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ locals, url, request, cookies }) => {
-	const accessToken = cookies.get('accessToken');
-	
-	if (accessToken != null) {
-        const address = `http://${env.FLASK_SERVER_ADDR}`;
-		try {
-			const response = await fetch(address + env.VALIDATE_URL, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					accessToken
-				})
-			});
-	
-			if (response.status === 200) {
-				cookies.set("loggedIn", 'true', { secure: false, path: '/' })
-	
-				const data = await response.json();
-				const username = data['user']['username'];
-				const admin = data['user']['admin'];
-				const loggedIn = true
-	
-				return {
-					user: {
-						loggedIn: loggedIn,
-						name: username,
-						admin: admin
-					}
-				};
-			}
-		} catch(error) {
-			console.error('Could not connect to backend:', error)
-			throw error;
-		}
+export const load = async ({ url, cookies, getClientAddress, request }: Parameters<LayoutServerLoad>[0]) => {
+	const address = `http://${env.FLASK_SERVER_ADDR}`;
+	let accessToken = cookies.get('accessToken');
+	let user_ip = request.headers.get('X-Forwarded-For')
+	const refreshToken = cookies.get('refreshToken');
+	const addresses = getAddresses(env, url, address)
+	let posts: Array<[string, string, boolean]> | any = await get_posts(address, env.GET_POSTS_URL)
+
+	const newAccessToken = await verifyRefreshToken(accessToken, refreshToken, address, cookies, env);
+
+	if (newAccessToken) {
+		accessToken = newAccessToken
+		cookies.set('accessToken', newAccessToken, { httpOnly: false, path: '/', maxAge: 15 });
 	}
 
-	// @ts-ignore
-	let loggedIn = cookies.get("loggedIn",{ path: '/' })
-	if (loggedIn == null) {
-		cookies.set('loggedIn', 'false', { secure: false, path: '/' })
+	if (accessToken && refreshToken) {
+		const validated_data = await validate_access(address, env.VALIDATE_URL, accessToken, env.API_KEY);
+
+		const user_posts_info: {likes: Array<object>, reactions: Array<object>} | any = await user_post_info(address, env.USER_POST_INFO, validated_data.user_id, env.API_KEY);
+
+		let liked_posts = user_posts_info.likes
+		let reacted_posts = user_posts_info.reactions
+		
+		let data = {
+			addresses,
+			user: {
+				'loggedIn': true,
+				'info': {'firstname': validated_data.firstname, 'lastname': validated_data.lastname, 'email': validated_data.email, 'user_id': validated_data.user_id, 'admin': validated_data.admin, 'pfp': validated_data.pfp},
+				'liked_posts': liked_posts,
+				'reacted_posts': reacted_posts
+			},
+			posts,
+			apikey: env.API_KEY,
+			analytics: {
+				analytics_key: env.ANALYTICS_KEY,
+				analytics_url: env.ANALYTICS_URL,
+				entered_url: env.ENTERED_URL
+			},
+			user_ip,
+			source: url.origin, 
+		};
+
+		return data
+
 	}
 
 	return {
+		addresses,
 		user: {
 			loggedIn: false
-		}
+		},
+		posts,
+		apikey: env.API_KEY,
+		user_ip,
+		source: url.origin, 
 	};
 
 }

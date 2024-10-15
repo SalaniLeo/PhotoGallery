@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   nginx-proxy:
     build: backend/nginx
@@ -25,7 +23,10 @@ services:
 
   flask-backend:
     build: backend/flask
-    restart: always
+    env_file:
+      - 'backend-urls.env'
+    volumes:
+      - posts-storage:/data
     ports: 
       - '8080:8080'
     healthcheck:
@@ -37,9 +38,8 @@ services:
 
   svelte-frontend:
     build: frontend
-    restart: always
     ports: 
-      - '3000:3000'
+      - '3001:3001'
     env_file:
       - 'backend-urls.env'
     environment:
@@ -49,3 +49,10 @@ services:
       timeout: 10s
       retries: 3
     command: node build
+
+volumes:
+  posts-storage:
+    driver_opts:
+      type: none
+      o: bind
+      device: /data

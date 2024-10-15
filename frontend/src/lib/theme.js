@@ -6,7 +6,7 @@ export const currentTheme = writable(getTheme());
 let newTheme = 'light'
 
 export function setCookie(name, args){
-	Cookies.set(name, args, { expires: 365 });
+	Cookies.set(name, args, { expires: 365, sameSite: 'Strict' });
 }
 
 export function getCookie(name){
@@ -27,8 +27,5 @@ export function loadTheme() {
   if (getCookie('theme') != null) {
     newTheme = getCookie('theme');
     document.documentElement.dataset.theme == newTheme;
-    // setTheme(newTheme, false);
-  } else {
-    // setTheme(newTheme, true);
   }
 }

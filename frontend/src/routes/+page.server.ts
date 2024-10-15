@@ -1,31 +1,21 @@
-import type { PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
+import { get_top_posts } from '../lib/fetcher';
 
-export const load: PageServerLoad = async ( { url } ) => {
-    console.log(url.origin)
-    try {
-        const address = `http://${env.FLASK_SERVER_ADDR}`;
-        const response = await fetch(address + env.GET_POSTS_URL);
+const address = `http://${env.FLASK_SERVER_ADDR}`;
 
-        if (!response.ok) {
-            throw new Error(`Failed to fetch posts: ${response.statusText}`);
-        }
+export async function load({ cookies, params }) {
+    const latest_post_data = await fetch(`${address}${env.GET_LATEST_POST_URL}`)
+    let latest_post = await latest_post_data.json();
 
-        const posts: Array<[string, string, boolean]> = await response.json();
+    const most_liked_post_data = await get_top_posts(address, env.MOST_LIKED)
+    let most_liked_post = await most_liked_post_data.top_posts;
 
-        return {
-            addresses: { 
-                url: env.DOMAIN,
-                address: address,
-                ip: url.origin,
-                delete: env.DELETE_POST,
-                upload: env.UPLOAD_POST,
-                get_posts: env.GET_POSTS_URL
-            },
-            posts
-        };
-    } catch (error) {
-        console.error('Error loading posts:', error);
-        throw error; // Rethrow or handle as needed
+    const most_viewed_post_data = await get_top_posts(address, env.MOST_VIEWED)
+    let most_viewed_post = await most_viewed_post_data.top_posts;
+
+    return {
+        latest_post: latest_post,
+        most_liked_post: most_liked_post,
+        most_viewed_post: most_viewed_post
     }
-};
+}

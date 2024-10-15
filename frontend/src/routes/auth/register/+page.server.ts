@@ -3,6 +3,15 @@ import { env } from '$env/dynamic/private';
 
 const address = `http://${env.FLASK_SERVER_ADDR}`;
 
+export async function load({ cookies, params }) {
+    const latest_post_data = await fetch(`${address}${env.GET_LATEST_POST_URL}`)
+    let latest_post = await latest_post_data.json();
+
+    return {
+        latest_post: latest_post,
+    }
+}
+
 export const actions = {
     default: async ({ request, cookies }) => {
         const data = await request.formData();
@@ -14,7 +23,8 @@ export const actions = {
         const response = await fetch(`${address}${env.REGISTER_URL}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-api-key': env.API_KEY
             },
             body: JSON.stringify({
                 firstname,
@@ -26,8 +36,7 @@ export const actions = {
 
         const json = await response.json();
         if (json['status'] === 200) {
-            cookies.set('accessToken', json.user.token, { path: '/', secure: false, maxAge: 24 * 60 * 60 * 30 } );
-            throw redirect(303, '/');
+            throw redirect(303, '/auth/login');
         } else {
             return fail(json['status'], {
                 error: json['response'],

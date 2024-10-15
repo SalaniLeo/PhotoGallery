@@ -1,10 +1,8 @@
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ cookies }) {
-	const loggedIn = cookies.get('loggedIn');
-    // setTheme(cookies.get('theme'), false)
+import { redirect } from '@sveltejs/kit';
 
-    return {
-		loggedIn: loggedIn,
-        // theme: theme
-	};
+// @ts-ignore
+export const load: LayoutServerLoad = async ({ cookies }) => {
+    if(!cookies.get('accessToken') && !cookies.get('refreshToken')) {
+        throw redirect(303, '/auth/login');
+    }
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PostView from './../../../lib/components/postView.svelte';
 	let email = '',
 		password = '',
 		error = '';
@@ -11,7 +12,7 @@
 	<div class="root">
 		<div class="container">
 			<div class="left">
-				<h3>Log In - or <a href="/auth/register">Sign In</a></h3>
+				<h2>Log In</h2>
 				<div class="content">
 					<div class="inputs">
 						<input
@@ -38,38 +39,25 @@
 					</div>
 					<div class="oauth"></div>
 				</div>
+				<div class="signin">
+					<p><a href="/auth/register">Sign In</a> to create an account</p>
+				</div>
 				<div class="ralign">
 					<button type="submit">Log In</button>
 				</div>
 			</div>
 			<div class="right">
-				{#await data['latest_post']}
-					<p>Loading..</p>
-				{:then latest}
-					{#if latest}
-						<div class="image">
-							<img src={`${data['address']}/static/${latest['source']}.jpg`} alt="Latest post" />
-						</div>
-					{/if}
-				{/await}
+				<!-- <LatestPost {data}></LatestPost> -->
+
+				<PostView post={data.latest_post} imageOnly={true} useAnalytics={false}></PostView>
 			</div>
 		</div>
 	</div>
 </form>
 
 <style>
-	.image {
-		display: flex;
-		justify-content: center;
-	}
-	img {
-		display: block;
-		max-width: 40vw; /* Maximum width */
-		max-height: 320px; /* Maximum height */
-		width: auto; /* Maintain aspect ratio */
-		height: auto; /* Maintain aspect ratio */
-		object-fit: scale-down; /* or object-fit: cover; */
-		border-radius: var(--border-radius-medium);
+	p {
+		margin: 0;
 	}
 	.root {
 		padding: 25px;
@@ -79,10 +67,11 @@
 	}
 	.container {
 		padding: 0px;
-		width: max-content;
+		width: unset;
 		height: fit-content;
 		border-radius: var(--border-radius-heavy);
-		background-color: var(--secondary-color);
+		border: 2px solid var(--border-color);
+		background-color: var(--background-blurry);
 		display: flex;
 		flex-direction: row;
 		overflow: hidden;
@@ -96,9 +85,10 @@
 		gap: 10px;
 	}
 	.container > .right {
-		background-color: var(--tertiary-color);
-		width: 60%;
-		padding: 1.5rem;
+		width: unset;
+		display: flex;
+		align-items: center;
+		padding: 1rem;
 	}
 	.left > .content {
 		height: 100%;
@@ -151,7 +141,10 @@
 			margin-right: 0.5rem;
 		}
 		.right {
-			display: none;
+			display: none !important;
+		}
+		.container {
+			width: 100%;
 		}
 		.left {
 			width: 100% !important;
