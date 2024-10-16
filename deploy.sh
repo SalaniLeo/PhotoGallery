@@ -1,1 +1,0 @@
-rsync -av --exclude-from='ignore-deploy.txt' $PWD $HOME/Projects/NightGallery-Deploy
