@@ -271,7 +271,8 @@
 		top: 0px;
 	}
 	.root {
-		transform: translateY(2rem);
+		padding: 1rem !important;
+		transform: translateY(calc(50% + 1rem));
 		transition-duration: 0s !important;
 		z-index: 10;
 		position: absolute;

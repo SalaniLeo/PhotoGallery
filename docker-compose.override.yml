@@ -1,18 +1,25 @@
-version: '3.8'
-
 services:
   svelte-frontend:
     build:
       context: frontend
-      target: development  # Use the development stage
+      target: development
     volumes:
       - $PWD/frontend:/app
       - /app/node_modules
     environment:
+      - FLASK_SERVER_ADDR=flask-backend:8000
       - NODE_ENV=development
+      - DOMAIN=http://localhost
+      - ORIGIN=http://localhost
+    env_file:
+      - 'backend-urls.env'
     ports:
-      - '3001:3001'
-    command: nodemon --watch src --watch static --ignore node_modules --ignore build --ignore .git --ignore tmp --exec npm run dev -- --port=3001
+      - "3000:3000"
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    command: nodemon --watch src --watch static --ignore node_modules --ignore build --ignore .git --exec npm run dev -- --host=0.0.0.0
 
 volumes:
   posts-storage:

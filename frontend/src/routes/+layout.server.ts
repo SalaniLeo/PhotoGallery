@@ -8,7 +8,7 @@ import type { LayoutServerLoad } from './$types';
 export const load = async ({ url, cookies, getClientAddress, request }: Parameters<LayoutServerLoad>[0]) => {
 	const address = `http://${env.FLASK_SERVER_ADDR}`;
 	let accessToken = cookies.get('accessToken');
-	let user_ip = request.headers.get('X-Forwarded-For')
+	let use_analytics = env.DOMAIN != 'http://localhost' ? true : false
 	const refreshToken = cookies.get('refreshToken');
 	const addresses = getAddresses(env, url, address)
 	let posts: Array<[string, string, boolean]> | any = await get_posts(address, env.GET_POSTS_URL)
@@ -43,7 +43,7 @@ export const load = async ({ url, cookies, getClientAddress, request }: Paramete
 				analytics_url: env.ANALYTICS_URL,
 				entered_url: env.ENTERED_URL
 			},
-			user_ip,
+			use_analytics,
 			source: url.origin, 
 		};
 
@@ -58,7 +58,7 @@ export const load = async ({ url, cookies, getClientAddress, request }: Paramete
 		},
 		posts,
 		apikey: env.API_KEY,
-		user_ip,
+		use_analytics,
 		source: url.origin, 
 	};
 

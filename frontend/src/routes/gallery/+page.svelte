@@ -8,7 +8,7 @@
 </script>
 
 <div class="root">
-	<div class="content flexcolumn gap-large">
+	<div class="content flexcolumn gap-large padding2">
 		<div class="topbar flexrow space-between">
 			<div class="start">
 				{#if $isUserLogged}
@@ -65,7 +65,7 @@
 		justify-content: center;
 		align-items: center;
 		display: flex;
-		gap: 1rem !important;
+		gap: 2rem !important;
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
@@ -88,21 +88,33 @@
 		.view-selector {
 			visibility: hidden;
 		}
+		.gridView {
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+		}
 	}
 	@media screen and (max-width: 1000px) {
 		.posts-container {
 			display: unset;
-			padding: 0;
-			margin: 0;
-		}
-		.columnView {
 			align-items: unset;
+		}
+		.post-wrapper {
+			margin-bottom: 1rem;
+		}
+		.topbar {
+			padding-left: 8rem;
+			padding-right: 8rem;
 		}
 	}
 	@media screen and (max-width: 720px) {
 		.posts-container {
 			margin-left: 0.5rem;
 			margin-right: 0.5rem;
+		}
+		.topbar {
+			padding-left: 2rem;
+			padding-right: 2rem;
 		}
 	}
 </style>

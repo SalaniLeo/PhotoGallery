@@ -490,7 +490,7 @@
 									>
 								{/if}
 							{/each}
-						{:else}
+						{:else if Object.values(post.reactions).length != 0}
 							{#each post.reactions as reaction}
 								<p class="reaction border-soft circle" style="padding: 0;">{reaction.emoji}</p>
 							{/each}

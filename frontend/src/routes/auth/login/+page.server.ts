@@ -40,8 +40,8 @@ export const actions = {
         const json = await response.json();
 
         if (json['status'] === 200) {
-            cookies.set('accessToken', json.user.accessToken, { path: '/', maxAge: 15 * 60 }); // 15 minutes expiry
-            cookies.set('refreshToken', json.user.refreshToken, { path: '/', maxAge: 24 * 60 * 60 * 7 }); // 7 days expiry
+            cookies.set('accessToken', json.user.accessToken, { path: '/', maxAge: 15 * 60 });
+            cookies.set('refreshToken', json.user.refreshToken, { path: '/', maxAge: 24 * 60 * 60 * 7 });
             
             throw redirect(303, '/');
         } else {

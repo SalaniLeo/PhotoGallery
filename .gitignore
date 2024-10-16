@@ -9,3 +9,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 database.ini
 venv
+backend.sh
+frontend.sh
+deploy.sh

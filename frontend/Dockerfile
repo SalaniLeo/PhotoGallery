@@ -1,48 +1,30 @@
-# Stage 1: Build Stage
-FROM node:22-alpine3.19 AS builder
-
+# Build stage
+FROM node:22-alpine AS builder
 WORKDIR /app
-
 COPY package*.json ./
-
 RUN npm ci
-
 COPY . ./
-
 RUN npm run build
-
 RUN npm prune --production
 
-# Stage 2: Production Stage
-FROM node:22-alpine3.19
-
+# Production stage
+FROM node:22-alpine AS production
 WORKDIR /app
-
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
 COPY package.json ./
-
 EXPOSE 3000
-
 ENV NODE_ENV=production
+CMD [ "node", "build" ]
 
-CMD ["node", "build"]
-
-# Stage 3: Development Stage (optional)
-FROM node:22-alpine3.19 AS development
-
+# Development stage
+FROM node:22-alpine AS development
 WORKDIR /app
-
-RUN yarn global add nodemon
-
+RUN npm install --global nodemon  # Use npm instead of yarn for consistency
 COPY package*.json ./
-
 RUN npm ci
-
 COPY . ./
-
 EXPOSE 3000
-
 ENV NODE_ENV=development
 
-CMD ["nodemon", "--watch", "/app", "--exec", "npm", "run", "dev"]
+CMD ["nodemon", "src/main.js", "--watch", ".", "--exec", "npm", "run", "dev"]
