@@ -1,7 +1,6 @@
 from config import load_config
 from dotenv import load_dotenv
 from connect import connect
-from connect import get_db_connection
 import json
 
 config = load_config()

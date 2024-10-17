@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -9,7 +9,6 @@ from analytics import Analytics
 import random, string, os, time, json
 import jwt, os
 from endpoints import *
-from pprint import pprint
 
 keepalive_kwargs = {
     "keepalives": 1,
