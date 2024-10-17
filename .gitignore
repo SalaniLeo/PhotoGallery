@@ -12,3 +12,4 @@ venv
 backend.sh
 frontend.sh
 deploy.sh
+ignore-deploy.txt

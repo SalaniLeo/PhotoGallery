@@ -12,7 +12,7 @@
 	<script
 		defer
 		src="https://analytics.salanileo.dev/script.js"
-		data-website-id="28647852-47d5-49b4-99b5-e48018cebe25"
+		data-website-id="eccefc55-f50f-4c06-9171-c3a68d1f5dfc"
 	></script>
 {/if}
 
