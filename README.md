@@ -5,31 +5,10 @@
 ## Configuration
 
 - Backend urls are customizable inside backend-urls.env
-- To connect to postgresql create a database.ini file inside backend/flask/
-<details>
-<summary>database.ini example</summary>
-    
-    [postgresql]
-    host=postgresql
-    database=postgresql
-    user=postgresql
-    password=postgresql
-
-
-</details>
+- To connect to postgresql edit the database.env file with your psql config
 
 ## Usage
 
-## With docker (recommanded)
+### Docker compose
 
-    docker compose up
-
-## Without docker (only for testing)
-
-### Start backend
-
-    bash backend.sh
-
-### Start frontend
-
-    bash frontend.sh
+    docker compose up --build

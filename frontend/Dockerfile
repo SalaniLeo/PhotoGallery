@@ -20,11 +20,9 @@ CMD [ "node", "build" ]
 # Development stage
 FROM node:22-alpine AS development
 WORKDIR /app
-RUN npm install --global nodemon  # Use npm instead of yarn for consistency
+RUN npm install --global nodemon
 COPY package*.json ./
 RUN npm ci
 COPY . ./
 EXPOSE 3000
 ENV NODE_ENV=development
-
-CMD ["nodemon", "src/main.js", "--watch", ".", "--exec", "npm", "run", "dev"]

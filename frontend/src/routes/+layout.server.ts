@@ -41,7 +41,6 @@ export const load = async ({ url, cookies, getClientAddress, request }: Paramete
 			analytics: {
 				analytics_key: env.ANALYTICS_KEY,
 				analytics_url: env.ANALYTICS_URL,
-				entered_url: env.ENTERED_URL
 			},
 			use_analytics,
 			source: url.origin, 
