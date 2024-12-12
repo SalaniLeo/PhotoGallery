@@ -1,5 +1,7 @@
 # PhotoGallery
 
+## go to v0.1 branch for the latest code
+
 🎑 Self Hostable website to show your best photos!
 
 ## Configuration
